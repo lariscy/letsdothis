@@ -9,7 +9,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
+  if(to.matched.some(record => record.meta.requiresAuth)){
+    
+  } else {
+    next()
+  }
 })
 
 export default router
