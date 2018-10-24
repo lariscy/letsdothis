@@ -1,27 +1,31 @@
 <template>
   <v-app>
-    <v-toolbar app dark color="red">
-      <v-toolbar-title class="headline">
-        <span>#letsdothis</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <span class="mr-2">for Cater</span>
-    </v-toolbar>
+    <v-container fluid pa-0>
+      <v-layout row child-flex wrap>
+        <div>
+          <v-toolbar dark color="red darken-1">
+            <v-toolbar-title>#letsdothis</v-toolbar-title>
+          </v-toolbar>
+        </div>
+        <div>
+          <v-toolbar dark color="black">
+            <v-spacer></v-spacer>
+            <v-toolbar-title>for Carter</v-toolbar-title>
+          </v-toolbar>
+        </div>
+      </v-layout>
+    </v-container>
 
     <v-content>
-      <HelloWorld/>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  },
   data () {
     return {
       //
