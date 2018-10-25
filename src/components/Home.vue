@@ -34,7 +34,9 @@
               min="0"
               max="20"
               color="red darken-1"
-              track-color="black"></v-slider>
+              track-color="black"
+              persistent-hint
+              :hint="totalForBracelet"></v-slider>
           <v-text-field 
               label="Additional Donation" 
               prefix="$"
@@ -47,9 +49,17 @@
           <v-switch 
               label="It's okay to share my message on this site!" 
               color="red darken-1"></v-switch>
+          <p class="text-xs-center"><strong>total goes here</strong></p>
+          <!--
+            cash - no need for address
+            others - no address needed
+
+            depends on method as to what information is shown
+          -->
           <v-btn 
               dark block 
               color="red darken-1">Submit</v-btn>
+          <p class="text-xs-center">* payment reminder</p>
         </v-form>
       </v-flex>
     </v-layout>
@@ -62,7 +72,14 @@ export default {
     return {
       numOfSliderVal: 0,
       numberOfSelectOptions: [0,1,2,3,4,5,6],
-      paymentSelectOptions: ["Cash in Person","Check","Paypal","Vinmo"]
+      paymentSelectOptions: ["Cash in Person","Check","PayPal","Venmo"],
+      totalForBracelet: "$0.00"
+    }
+  },
+
+  watch: {
+    numOfSliderVal: function () {
+      this.totalForBracelet = "$"+(this.numOfSliderVal * 5)+".00"
     }
   }
 }
