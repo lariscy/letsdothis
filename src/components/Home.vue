@@ -21,9 +21,6 @@
           <v-text-field 
               label="Email"
               hint="Email is pulled from Facebook if you logged in with Facebook"></v-text-field>
-          <v-select 
-              :items="numberOfSelectOptions" 
-              label="Number of bracelets"></v-select>
           <v-label>Number of bracelets</v-label>
           <v-slider class="mt-4"
               v-model="numOfSliderVal"
@@ -36,20 +33,36 @@
               color="red darken-1"
               track-color="black"
               persistent-hint
-              :hint="totalForBracelet"></v-slider>
+              :hint="totalForNumberOfBracelets"
+              @input="updateTotal"></v-slider>
           <v-text-field 
+              v-model="additionalDonationDollars"
               label="Additional Donation" 
               prefix="$"
-              hint="Format 00.00"></v-text-field>
+              suffix=".00"
+              hint="In dollar amount"
+              @input="updateTotal"></v-text-field>
           <v-select
               :items="paymentSelectOptions"
-              label="Payment method"></v-select>
+              item-text="label"
+              label="Payment method"
+              @change="paymentSelectChanged"></v-select>
+          <div v-if="addressInfoIsVisable" class="grey lighten-4 pa-2">
+            <v-text-field
+                label="Address"></v-text-field>
+            <v-text-field
+                label="City"></v-text-field>
+            <v-text-field
+                label="State"></v-text-field>
+            <v-text-field
+                label="Zip Code"></v-text-field>
+          </div>
           <v-textarea 
               label="Message for the family"></v-textarea>
           <v-switch 
               label="It's okay to share my message on this site!" 
               color="red darken-1"></v-switch>
-          <p class="text-xs-center"><strong>total goes here</strong></p>
+          <p class="text-xs-center"><strong>Total: {{ totalForAll }}</strong></p>
           <!--
             cash - no need for address
             others - no address needed
@@ -59,7 +72,10 @@
           <v-btn 
               dark block 
               color="red darken-1">Submit</v-btn>
-          <p class="text-xs-center">* payment reminder</p>
+          <p class="text-xs-center">
+            * If you selected a payment method other than '{{ paymentSelectOptions[0].label }}',
+            your bracelet(s) will be shipped after payment is received.
+          </p>
         </v-form>
       </v-flex>
     </v-layout>
@@ -71,15 +87,32 @@ export default {
   data () {
     return {
       numOfSliderVal: 0,
-      numberOfSelectOptions: [0,1,2,3,4,5,6],
-      paymentSelectOptions: ["Cash in Person","Check","PayPal","Venmo"],
-      totalForBracelet: "$0.00"
+      additionalDonationDollars: null,
+      paymentSelectOptions: [
+        { label: "Cash in Person", requireAddress: false },
+        { label: "Check", requireAddress: true },
+        { label: "PayPal", requireAddress: true },
+        { label: "Venmo", requireAddress: true }
+      ],
+      totalForNumberOfBracelets: "$0.00",
+      totalForAll: "$0.00",
+      addressInfoIsVisable: false
     }
   },
 
-  watch: {
-    numOfSliderVal: function () {
-      this.totalForBracelet = "$"+(this.numOfSliderVal * 5)+".00"
+  methods: {
+    updateTotal: function(){
+      console.log(this.additionalDonationDollars)
+      this.totalForNumberOfBracelets = "$"+(this.numOfSliderVal * 5)+".00"
+
+      const total = ((this.numOfSliderVal * 5) + 
+          ((this.additionalDonationDollars == null || this.additionalDonationDollars == "" ) ? 
+              0 : parseInt(this.additionalDonationDollars)))
+      this.totalForAll = "$"+total+".00"
+    },
+    paymentSelectChanged: function(e){
+      this.addressInfoIsVisable = (e != this.paymentSelectOptions[0].label)
+      console.log(this.addressInfoIsVisable)
     }
   }
 }
