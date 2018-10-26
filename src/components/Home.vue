@@ -58,6 +58,8 @@
                 label="Zip Code"></v-text-field>
           </div>
           <v-textarea 
+              auto-grow
+              counter="250"
               label="Message for the family"></v-textarea>
           <v-switch 
               label="It's okay to share my message on this site!" 
