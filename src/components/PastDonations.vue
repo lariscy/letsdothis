@@ -10,13 +10,13 @@
         <v-data-table
             :headers="tableHeaders"
             :items="tableItems"
-            hide-actions>
+            :pagination.sync="pagination">
           <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.amount }}</td>
             <td>{{ props.item.date }}</td>
             <td v-if="props.item.message" class="text-xs-center">
-              <v-btn dark fab color="red darken-1"><v-icon>pageview</v-icon></v-btn>
+              <v-btn dark fab small color="red darken-1"><v-icon>pageview</v-icon></v-btn>
             </td>
           </template>
         </v-data-table>
@@ -36,9 +36,25 @@ export default {
         { text: 'Message', value: 'message', align: 'center', sortable: false },
       ],
       tableItems: [
-        { name: 'Steven Lariscy', amount: '$100.00', date: new Date(), message: true },
-        { name: 'Kate Ingram', amount: '$100.00', date: new Date(), message: false },
-      ]
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+        { name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: true },
+        { name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
+      ],
+      pagination: {
+        //sortBy: 'date',
+        rowsPerPage: 10
+      }
     }
   }
 }

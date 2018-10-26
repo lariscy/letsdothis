@@ -14,14 +14,18 @@
 
     <v-layout row>
       <v-flex>
-        <v-form>
+        <v-form ref="form" v-model="formIsValid">
           <v-text-field 
               label="Name"
-              disabled></v-text-field>
+              disabled
+              required
+              :rules="[rules.required]"></v-text-field>
           <v-text-field 
               label="Email"
-              hint="Email is pulled from Facebook if you logged in with Facebook"></v-text-field>
-          <v-label>Number of bracelets</v-label>
+              hint="Optional change email"
+              required
+              :rules="[rules.required]"></v-text-field>
+          <v-label>Number of Bracelets</v-label>
           <v-slider class="mt-4"
               v-model="numOfSliderVal"
               thumb-label="always"
@@ -41,39 +45,45 @@
               prefix="$"
               suffix=".00"
               hint="In dollar amount"
-              @input="updateTotal"></v-text-field>
+              @input="updateTotal"
+              :rules="[rules.onlyNumbers]"></v-text-field>
           <v-select
               :items="paymentSelectOptions"
               item-text="label"
-              label="Payment method"
+              label="Payment Method"
               @change="paymentSelectChanged"></v-select>
+          
           <div v-if="addressInfoIsVisable" class="grey lighten-4 pa-2">
+            <p class="text-xs-center mb-0">
+              <v-label>- Shipping Information -</v-label>
+            </p>
             <v-text-field
-                label="Address"></v-text-field>
+                label="Address"
+                :rules="[rules.requiredIfAddress]"></v-text-field>
             <v-text-field
-                label="City"></v-text-field>
+                label="City"
+                :rules="[rules.requiredIfAddress]"></v-text-field>
             <v-text-field
-                label="State"></v-text-field>
+                label="State"
+                :rules="[rules.requiredIfAddress]"></v-text-field>
             <v-text-field
-                label="Zip Code"></v-text-field>
+                label="Zip Code"
+                :rules="[rules.requiredIfAddress]"></v-text-field>
           </div>
+
           <v-textarea 
               auto-grow
               counter="250"
-              label="Message for the family"></v-textarea>
+              label="Message for the Family"></v-textarea>
           <v-switch 
               label="It's okay to share my message on this site!" 
               color="red darken-1"></v-switch>
           <p class="text-xs-center"><strong>Total: {{ totalForAll }}</strong></p>
-          <!--
-            cash - no need for address
-            others - no address needed
 
-            depends on method as to what information is shown
-          -->
           <v-btn 
               dark block 
-              color="red darken-1">Submit</v-btn>
+              color="red darken-1"
+              @click="formSubmit">Submit</v-btn>
           <p class="text-xs-center">
             * If you selected a payment method other than '{{ paymentSelectOptions[0].label }}',
             your bracelet(s) will be shipped after payment is received.
@@ -88,6 +98,7 @@
 export default {
   data () {
     return {
+      formIsValid: false,
       numOfSliderVal: 0,
       additionalDonationDollars: null,
       paymentSelectOptions: [
@@ -98,7 +109,12 @@ export default {
       ],
       totalForNumberOfBracelets: "$0.00",
       totalForAll: "$0.00",
-      addressInfoIsVisable: false
+      addressInfoIsVisable: false,
+      rules: {
+        required: value => !!value || 'Required',
+        requiredIfAddress: value => (!!value && this.addressInfoIsVisable) || 'Required based on Payment Method',
+        onlyNumbers: value => (!value || (value.match(/^[0-9]+$/) != null)) || 'Only digits [0-9] allowed'
+      }
     }
   },
 
@@ -107,14 +123,18 @@ export default {
       console.log(this.additionalDonationDollars)
       this.totalForNumberOfBracelets = "$"+(this.numOfSliderVal * 5)+".00"
 
-      const total = ((this.numOfSliderVal * 5) + 
-          ((this.additionalDonationDollars == null || this.additionalDonationDollars == "" ) ? 
-              0 : parseInt(this.additionalDonationDollars)))
+      const total = (this.numOfSliderVal * 5) + 
+          (this.additionalDonationDollars ? 0 : parseInt(this.additionalDonationDollars))
       this.totalForAll = "$"+total+".00"
     },
     paymentSelectChanged: function(e){
       this.addressInfoIsVisable = (e != this.paymentSelectOptions[0].label)
       console.log(this.addressInfoIsVisable)
+    },
+    formSubmit: function(){
+      if (this.$refs.form.validate()){
+        console.log('form is valid!')
+      }
     }
   }
 }
