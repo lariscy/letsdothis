@@ -18,6 +18,7 @@
             <td v-if="props.item.message" class="text-xs-center">
               <v-btn dark fab small color="red darken-1"><v-icon>pageview</v-icon></v-btn>
             </td>
+            <td v-else></td>
           </template>
         </v-data-table>
       </v-flex>

@@ -124,7 +124,7 @@ export default {
       this.totalForNumberOfBracelets = "$"+(this.numOfSliderVal * 5)+".00"
 
       const total = (this.numOfSliderVal * 5) + 
-          (this.additionalDonationDollars ? 0 : parseInt(this.additionalDonationDollars))
+          (!this.additionalDonationDollars ? 0 : parseInt(this.additionalDonationDollars))
       this.totalForAll = "$"+total+".00"
     },
     paymentSelectChanged: function(e){

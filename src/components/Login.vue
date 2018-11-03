@@ -12,7 +12,7 @@
 
             <v-btn block dark color="red darken-1">Login</v-btn>
             <div class="text-xs-center">OR</div>
-            <v-btn block dark color="blue darken-4">
+            <v-btn block dark color="blue darken-4" @click="loginWithFacebook">
               <v-icon left>fab fa-facebook</v-icon> 
               Login with Facebook
             </v-btn>
@@ -24,9 +24,66 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      //
-    })
+import axios from 'axios'
+
+export default {
+  data () {
+    return {
+      
+    }
+  },
+
+  mounted: function(){
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId: '250860632207383',
+        autoLogAppEvents: true,
+        status: true,
+        xfbml: true,
+        cookie: true,
+        version: 'v3.2'
+      });
+
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          this.$router.push({ name: 'home' })
+        }
+      })
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  },
+
+  methods: {
+    loginWithFacebook: function(){
+      const me = this
+      FB.login(function(response) {
+        if (response.authResponse) {
+          //console.log(response)
+          axios.post('/letsdothis-api/fblogin')
+              .then((axResponse) => {
+                //console.log(axResponse)
+                if (axResponse.data.status == 'ok'){
+                  me.$router.push({ name: 'home' })
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          // Now you can redirect the user or do an AJAX request to
+          // a PHP script me grabs the signed request from the cookie.
+        } else {
+          alert('User cancelled login or did not fully authorize.');
+        }
+      });
+      return false;
+    }
   }
+}
 </script>
