@@ -1,13 +1,13 @@
 <template>
-  <Home />
+  <Donate />
 </template>
 
 <script>
-  import Home from '../components/Home'
+  import Donate from '../components/Donate'
 
   export default {
     components: {
-      Home
+      Donate
     }
   }
 </script>

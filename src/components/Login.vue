@@ -7,11 +7,13 @@
         </v-toolbar>
         <v-card-text>
           <v-form>
-            <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-            <v-text-field prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
+            <div v-if="showNormalLogin">
+              <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
+              <v-text-field prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
 
-            <v-btn block dark color="red darken-1">Login</v-btn>
-            <div class="text-xs-center">OR</div>
+              <v-btn block dark color="red darken-1">Login</v-btn>
+              <div class="text-xs-center">OR</div>
+            </div>
             <v-btn block dark color="blue darken-4" @click="loginWithFacebook">
               <v-icon left>fab fa-facebook</v-icon> 
               Login with Facebook
@@ -29,7 +31,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      
+      showNormalLogin: false
     }
   },
 
@@ -46,7 +48,7 @@ export default {
 
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: 'donate' })
         }
       })
     };
@@ -70,7 +72,7 @@ export default {
               .then((axResponse) => {
                 //console.log(axResponse)
                 if (axResponse.data.status == 'ok'){
-                  me.$router.push({ name: 'home' })
+                  me.$router.push({ name: 'donate' })
                 }
               })
               .catch((err) => {
@@ -81,7 +83,7 @@ export default {
         } else {
           alert('User cancelled login or did not fully authorize.');
         }
-      });
+      }, {scope: 'email'});
       return false;
     }
   }
