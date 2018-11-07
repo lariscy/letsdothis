@@ -9,15 +9,21 @@
     <v-layout row>
       <v-flex>
         <v-img
-            :src="`https://via.placeholder.com/150.png?text=LetsDoThis`"
+            src="/carter_pic.jpg"
             max-width="300"
-            class="mx-auto"></v-img>
+            class="mx-auto mb-3"></v-img>
       </v-flex>
     </v-layout>
 
     <v-layout row>
       <v-flex>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae et esse in rerum ut voluptates fugiat iste repellat cum, facilis atque quisquam quia architecto id sapiente magni, porro incidunt vero aliquid inventore sequi ab. Ullam repellat sequi quas ab officia delectus quo in distinctio nemo animi qui labore vitae, exercitationem quis. Suscipit sint obcaecati doloribus eveniet magni porro unde molestiae! Ipsum impedit ad cupiditate mollitia dolores laboriosam quia ratione vitae quisquam, ab dolore dolorum natus tempora? Libero voluptatum, incidunt sunt fugiat suscipit ab repudiandae totam et, odit nihil quos nobis quisquam. Ipsam eligendi soluta iure accusantium, laborum ipsum. Quidem illo suscipit officia aspernatur aut alias, sint perspiciatis ab voluptate consectetur placeat eligendi perferendis quas ipsum repellendus aliquam eaque veniam sed eos incidunt dicta nihil. Quibusdam, ipsam recusandae. Ipsum, incidunt! Amet, fugit soluta tenetur quaerat iure ipsam quasi sequi expedita! Commodi rerum tempora minus, similique minima non, accusamus aliquam, natus praesentium sint doloremque! Soluta accusamus illum expedita inventore animi tempora dolor libero autem quaerat repellendus quas vitae distinctio cum nulla, porro deleniti esse excepturi! Vel impedit excepturi ipsa, temporibus non animi explicabo. Adipisci doloribus nam cupiditate aperiam, voluptate rem velit, ut iste maxime placeat ex deleniti mollitia molestiae voluptatem impedit sunt illo non alias est tempora eligendi asperiores sapiente? Et laborum nisi quis, odio dolores inventore quidem eos optio culpa reiciendis dolore ipsa voluptatibus qui iure aliquid mollitia vero, debitis accusantium vel nobis dolorum. Sunt eum doloremque facilis maiores non impedit ab quidem autem possimus ex, minima omnis repellendus enim harum aut aspernatur voluptatem suscipit, vel aliquid, molestias quis nostrum. Ad at neque molestiae, earum ratione repudiandae nobis quasi id, doloribus in, est modi? Laudantium autem exercitationem sit! Doloribus repellendus deleniti recusandae quam odio! Ipsam possimus laboriosam libero dolor velit ipsum. Laboriosam aliquam eaque natus sapiente similique culpa beatae! Mollitia, accusamus?</p>
+        <p>On May 14, 2018, Carter Cummins was admitted into Memorial Children's Hospital to undergo several long days and restless nights of tests to determine the underlying cause of his unexplained weight loss. With great shock and dismay, the test results provided answers that no parent could ever prepare for and that no child should ever have to experience. With these results, Carter was diagnosed with Diencephalic Syndrome which is a very rare disorder caused by a brain tumor.</p>
+        <p>Since May 14, Carter has undergone numerous CT scans, sedated MRIs, surgeries, chemo therapy treatments, a shunt implant and even a 9 hour brain surgery! He's also since celebrated his 2nd birthday - making him the strongest 2 year old most will ever know in their lifetime! Strength that is much like his parents, Erin and Joey.</p>
+        <p>Carter's original chemo therapy regimen was called off after an MRI during an ER visit following Carter's fourth treatment showed that the chemo was not producing the results his doctors expected to see. Carter's case was recently referred to the Children's Hospital of Atlanta where he will be participating in a clinical trial of MEK inhibitors.</p>
+        <p>Carter has a long road ahead of him and we hope that these bracelets will allow each of you to help spread the word of his story and show support for his family. The bracelets represent Carter's favorite saying ("lets do this") and his favorite thing in the world, besides his mommy, Mickey Mouse.</p>
+        <p>We're asking for $5 per bracelet but additional donations are welcome. 100% of the proceeds are going to Carter and his parents.</p>
+        <p>We can't thank you enough for your thoughts, prayers, and continued support for Carter!!</p>
+        <p>#letsdothis</p>
       </v-flex>
     </v-layout>
 
@@ -36,7 +42,7 @@
               hint="Optional change email"
               required
               :rules="[rules.required]"></v-text-field>
-          <v-label>Number of Bracelets</v-label>
+          <!-- <v-label>Number of Bracelets</v-label> -->
           <v-slider class="mt-4"
               label="Number of Bracelets"
               v-model="numOfSliderVal"
@@ -104,7 +110,8 @@
           <v-btn 
               dark block 
               color="red darken-1"
-              @click="formSubmit">Submit</v-btn>
+              @click="formSubmit"
+              :loading="submitInAction">Submit</v-btn>
           <p class="text-xs-center">
             * If you selected a payment method other than '{{ paymentSelectOptions[0].label }}',
             your bracelet(s) will be shipped after payment is received.
@@ -148,7 +155,8 @@ export default {
       fZip: '',
       fMessageForFamily: '',
       fShowMessageForFamily: false,
-      errMessage: false
+      errMessage: false,
+      submitInAction: false
     }
   },
 
@@ -179,6 +187,8 @@ export default {
           return
         }
 
+        me.submitInAction = true
+
         //console.log('form is valid!')
         axios.post('/letsdothis-api/donation', {
           name: this.fName,
@@ -200,6 +210,9 @@ export default {
             })
             .catch(err => {
               console.log(err)
+            })
+            .finally(()=>{
+              me.submitInAction = false
             })
       }
     }
