@@ -46,11 +46,11 @@ export default {
         version: 'v3.2'
       });
 
-      FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          this.$router.push({ name: 'donate' })
-        }
-      })
+      // FB.getLoginStatus(function(response) {
+      //   if (response.status === 'connected') {
+      //     this.$router.push({ name: 'donate' })
+      //   }
+      // })
     };
 
     (function(d, s, id){

@@ -34,11 +34,14 @@
               v-model="fName"
               label="Name"
               disabled
+              :loading="fNameLoading"
               required
               :rules="[rules.required]"></v-text-field>
           <v-text-field 
               v-model="fEmail"
               label="Email"
+              :loading="fEmailLoading"
+              :disabled="fEmailDisabled"
               hint="Optional change email"
               required
               :rules="[rules.required]"></v-text-field>
@@ -56,7 +59,8 @@
               track-color="black"
               persistent-hint
               :hint="totalForNumberOfBracelets"
-              @input="updateTotal"></v-slider>
+              @input="updateTotal"
+              @change="paymentSelectChanged"></v-slider>
           <v-text-field 
               v-model="additionalDonationDollars"
               label="Additional Donation" 
@@ -70,11 +74,51 @@
               :items="paymentSelectOptions"
               item-text="label"
               label="Payment Method"
+              :rules="[rules.required]"
               @change="paymentSelectChanged"></v-select>
+
+          <div v-if="cashInfoIsVisable" class="grey lighten-4 pa-2">
+            <p class="text-xs-center mb-0">
+              <v-label>- Note -</v-label>
+            </p>
+            <p class="text-xs-center mb-0">
+              Cash in Person is available if you plan to see Kate Ingram or Steven Lariscy in person.
+            </p>
+          </div>
+
+          <div v-if="checkInfoIsVisable" class="grey lighten-4 pa-2">
+            <p class="text-xs-center mb-0">
+              <v-label>- Note -</v-label>
+            </p>
+            <p class="text-xs-center mb-0">
+              We will send you an email with the address to mail your check once your order has been reviewed.
+            </p>
+          </div>
+
+          <div v-if="paypalInfoIsVisable" class="grey lighten-4 pa-2">
+            <p class="text-xs-center mb-0">
+              <v-label>- Note -</v-label>
+            </p>
+            <p class="text-xs-center mb-0">
+              Payments should be sent to: FART
+            </p>
+          </div>
+
+          <div v-if="venmoInfoIsVisable" class="grey lighten-4 pa-2">
+            <p class="text-xs-center mb-0">
+              <v-label>- Note -</v-label>
+            </p>
+            <p class="text-xs-center mb-0">
+              Payments should be sent to: @katecingram
+            </p>
+          </div>
           
           <div v-if="addressInfoIsVisable" class="grey lighten-4 pa-2">
             <p class="text-xs-center mb-0">
               <v-label>- Shipping Information -</v-label>
+            </p>
+            <p class="text-xs-center mb-0">
+              Shipping information is required to mail your bracelet{{ numOfSliderVal != 1 ? 's': '' }}. It will not be shared on this site.
             </p>
             <v-text-field
                 v-model="fAddress"
@@ -97,8 +141,9 @@
           <v-textarea 
               v-model="fMessageForFamily"
               auto-grow
-              counter="250"
-              label="Message for the Family"></v-textarea>
+              :counter="maxLengthMessage"
+              label="Message for the Family"
+              :rules="[rules.noMoreThanMax]"></v-textarea>
           <v-switch 
               v-model="fShowMessageForFamily"
               label="It's okay to share my message on this site!" 
@@ -114,7 +159,7 @@
               :loading="submitInAction">Submit</v-btn>
           <p class="text-xs-center">
             * If you selected a payment method other than '{{ paymentSelectOptions[0].label }}',
-            your bracelet(s) will be shipped after payment is received.
+            your bracelet{{ numOfSliderVal != 1 ? 's': '' }} will be shipped after payment is received.
           </p>
         </v-form>
       </v-flex>
@@ -129,6 +174,9 @@ export default {
   data () {
     return {
       formIsValid: false,
+      fNameLoading: true,
+      fEmailLoading: true,
+      fEmailDisabled: true,
       numOfSliderVal: 0,
       additionalDonationDollars: null,
       paymentSelectOptions: [
@@ -137,17 +185,23 @@ export default {
         { label: "PayPal", requireAddress: true },
         { label: "Venmo", requireAddress: true }
       ],
+      maxLengthMessage: 250,
       totalForNumberOfBracelets: "$0.00 - (0 bracelets selected)",
       totalForAll: "$0.00",
       totalDonation: 0,
+      cashInfoIsVisable: false,
+      checkInfoIsVisable: false,
+      paypalInfoIsVisable: false,
+      venmoInfoIsVisable: false,
       addressInfoIsVisable: false,
       rules: {
         required: value => !!value || 'Required',
         requiredIfAddress: value => (!!value && this.addressInfoIsVisable) || 'Required based on Payment Method',
-        onlyNumbers: value => (!value || (value.match(/^[0-9]+$/) != null)) || 'Only digits [0-9] allowed'
+        onlyNumbers: value => (!value || (value.match(/^[0-9]+$/) != null)) || 'Only digits [0-9] allowed',
+        noMoreThanMax: value => (value.length <= this.maxLengthMessage) || 'Max of '+this.maxLengthMessage+' characters'
       },
-      fName: 'a',
-      fEmail: 'a',
+      fName: '',
+      fEmail: '',
       fPaymentMethod: '',
       fAddress: '',
       fState: '',
@@ -160,18 +214,37 @@ export default {
     }
   },
 
+  mounted: function(){
+    const me = this
+    axios.post('/letsdothis-api/visit').catch(err => { console.log(err) })
+    axios.get('/letsdothis-api/getuserinfo')
+        .then(response => {
+          if (response.data.status == 'ok'){
+            me.fName = response.data.data.name
+            me.fEmail = response.data.data.email
+
+            me.fNameLoading = me.fEmailLoading = me.fEmailDisabled = false
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  },
+
   methods: {
     updateTotal: function(){
-      //console.log(this.additionalDonationDollars)
-      this.totalForNumberOfBracelets = "$"+(this.numOfSliderVal * 5)+".00 - ("+this.numOfSliderVal+" bracelets selected)"
+      this.totalForNumberOfBracelets = "$"+(this.numOfSliderVal * 5)+".00 - ("+this.numOfSliderVal+" bracelet"+(this.numOfSliderVal != 1 ? "s" : "")+" selected)"
 
       this.totalDonation = (this.numOfSliderVal * 5) + (this.additionalDonationDollars ? parseInt(this.additionalDonationDollars) : 0)
 
       this.totalForAll = "$"+this.totalDonation+".00"
     },
-    paymentSelectChanged: function(e){
-      this.addressInfoIsVisable = (e != this.paymentSelectOptions[0].label)
-      //console.log(this.addressInfoIsVisable)
+    paymentSelectChanged: function(){
+      this.cashInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[0].label)
+      this.checkInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[1].label)
+      this.paypalInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[2].label)
+      this.venmoInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[3].label)
+      this.addressInfoIsVisable = (this.fPaymentMethod != this.paymentSelectOptions[0].label && this.numOfSliderVal > 0)
     },
     atLeastOneDonation: function(){
       if (this.numOfSliderVal == 0 && ((this.additionalDonationDollars ? parseInt(this.additionalDonationDollars) : 0) == 0)){
@@ -189,7 +262,6 @@ export default {
 
         me.submitInAction = true
 
-        //console.log('form is valid!')
         axios.post('/letsdothis-api/donation', {
           name: this.fName,
           email: this.fEmail,

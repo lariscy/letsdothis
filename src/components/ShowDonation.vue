@@ -19,18 +19,34 @@
             <v-flex>
                 <v-btn v-if="showShowAllDonationsBtn" color="red darken-1" block dark>Show All Donations</v-btn>
                 <v-btn color="red darken-1" block dark to="/donate">Donate Again</v-btn>
+                <v-btn color="black" block dark @click="doLogout">Logout</v-btn>
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data () {
         return {
             showShowAllDonationsBtn: false,
             donateName: '{donateName}',
             donateAmount: '{donateAmount}'
+        }
+    },
+
+    methods: {
+        doLogout: function(){
+            const me = this
+            axios.post('/letsdothis-api/killsession')
+                    .then(response => {
+                        if (response.data.status == 'ok'){
+                            me.$router.push({ name: 'login' })
+                        }
+                    })
+                    .catch(err => console.log(err))
         }
     }
 }
