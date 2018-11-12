@@ -25,6 +25,11 @@
     <v-footer class="pa-3">
       <div>#letsdothis</div>
       <v-spacer></v-spacer>
+      <div class="hidden-sm-and-down">
+        <v-btn flat
+            href="mailto:letsdothisforcarter@gmail.com">letsdothisforcarter@gmail.com</v-btn>
+      </div>
+      <v-spacer></v-spacer>
       <div>&copy; {{ new Date().getFullYear() }}</div>
     </v-footer>
   </v-app>

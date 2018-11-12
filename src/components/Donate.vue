@@ -23,7 +23,7 @@
         <p>Carter has a long road ahead of him and we hope that these bracelets will allow each of you to help spread the word of his story and show support for his family. The bracelets represent Carter's favorite saying ("lets do this") and his favorite thing in the world, besides his mommy, Mickey Mouse.</p>
         <p>We're asking for $5 per bracelet but additional donations are welcome. 100% of the proceeds are going to Carter and his parents.</p>
         <p>We can't thank you enough for your thoughts, prayers, and continued support for Carter!!</p>
-        <p>#letsdothis</p>
+        <h4 class="display-1" style="font-family: Shadows Into Light !important;">#letsdothis</h4>
       </v-flex>
     </v-layout>
 

@@ -27,6 +27,15 @@
         </v-layout>
         <v-layout row>
             <v-flex>
+                <p class="text-xs-center">
+                    <v-avatar size="150" class="elevation-5">
+                        <v-img src="https://via.placeholder.com/150C"></v-img>
+                    </v-avatar>
+                </p>
+            </v-flex>
+        </v-layout>
+        <v-layout row>
+            <v-flex>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis omnis incidunt accusamus expedita voluptatibus animi, in veniam sed id, labore repellat aspernatur cum, itaque repellendus odit quos praesentium maiores! Repellendus harum, aliquid quia odit, et, id aspernatur maiores aliquam porro delectus doloremque error modi. Tempora optio minima et consequatur temporibus!
             </v-flex>
         </v-layout>
