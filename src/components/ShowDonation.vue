@@ -1,5 +1,20 @@
 <template>
     <div>
+        <v-dialog
+                v-model="showLoadingDialog"
+                hide-overlay
+                persistent
+                max-width="300">
+            <v-card color="red darken-1" dark>
+                <v-card-text>
+                    Loading information...
+                    <v-progress-linear
+                            indeterminate
+                            color="white"
+                            class="mb-0"></v-progress-linear>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-layout row>
             <v-flex>
                 <h3 class="display-2 mb-3">Thank you <span class="headline grey--text">{{ donateName }}</span></h3>
@@ -7,7 +22,7 @@
         </v-layout>
         <v-layout row>
             <v-flex>
-                <h3 class="display-2 mb-3"><span class="headline grey--text">for your donation of </span>{{ donateAmount }}</h3>
+                <h3 class="display-2 mb-3"><span class="headline grey--text">for your</span> {{ donateAmount }} <span class="headline grey--text">donation</span></h3>
             </v-flex>
         </v-layout>
         <v-layout row>
@@ -22,6 +37,15 @@
                 <v-btn color="black" block dark @click="doLogout">Logout</v-btn>
             </v-flex>
         </v-layout>
+        <v-layout row>
+            <v-flex>
+                <p class="text-xs-center">
+                    You will receive a confirmation email from 
+                    <a href="mailto:letdothisforcarter@gmail.com">letdothisforcarter@gmail.com</a> 
+                    once your order has been reviewed.
+                </p>
+            </v-flex>
+        </v-layout>
     </div>
 </template>
 
@@ -31,10 +55,28 @@ import axios from 'axios'
 export default {
     data () {
         return {
+            showLoadingDialog: true,
             showShowAllDonationsBtn: false,
-            donateName: '{donateName}',
-            donateAmount: '{donateAmount}'
+            donateName: '',
+            donateAmount: ''
         }
+    },
+
+    mounted: function(){
+        const me = this
+        axios.get('/letsdothis-api/donation/last')
+                .then(response => {
+                    if (response.data.status == 'ok'){
+                        const numberOfBracelets = response.data.data.numberOfBracelets
+                        const additionalDonation = response.data.data.additionalDonation
+
+                        me.donateName = response.data.data.name
+                        me.donateAmount = "$"+((numberOfBracelets * 5) + additionalDonation)+".00"
+
+                        me.showLoadingDialog = false
+                    }
+                })
+                .catch(err => console.log(err))
     },
 
     methods: {

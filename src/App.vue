@@ -22,6 +22,11 @@
         </v-content>
       </v-layout>
     </v-container>
+    <v-footer class="pa-3">
+      <div>#letsdothis</div>
+      <v-spacer></v-spacer>
+      <div>&copy; {{ new Date().getFullYear() }}</div>
+    </v-footer>
   </v-app>
 </template>
 

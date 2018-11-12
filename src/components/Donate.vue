@@ -240,11 +240,13 @@ export default {
       this.totalForAll = "$"+this.totalDonation+".00"
     },
     paymentSelectChanged: function(){
-      this.cashInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[0].label)
-      this.checkInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[1].label)
-      this.paypalInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[2].label)
-      this.venmoInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[3].label)
-      this.addressInfoIsVisable = (this.fPaymentMethod != this.paymentSelectOptions[0].label && this.numOfSliderVal > 0)
+      if (this.fPaymentMethod){
+        this.cashInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[0].label)
+        this.checkInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[1].label)
+        this.paypalInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[2].label)
+        this.venmoInfoIsVisable = (this.fPaymentMethod == this.paymentSelectOptions[3].label)
+        this.addressInfoIsVisable = (this.fPaymentMethod != this.paymentSelectOptions[0].label && this.numOfSliderVal > 0)
+      }
     },
     atLeastOneDonation: function(){
       if (this.numOfSliderVal == 0 && ((this.additionalDonationDollars ? parseInt(this.additionalDonationDollars) : 0) == 0)){

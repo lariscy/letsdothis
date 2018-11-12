@@ -11,6 +11,7 @@ export default [
     //{ name: 'showdonation', path: '/showdonation', component: ShowDonation, meta: { requiresAuth: true } },
     { name: 'showdonation', path: '/showdonation', component: ShowDonation },
     { name: 'privacypolicy', path: '/privacypolicy', component: PrivacyPolicy },
-    { name: 'pastdonations', path: '/pastdonations', component: PastDonations, meta: { requiresAuth: true } },
+    //{ name: 'pastdonations', path: '/pastdonations', component: PastDonations, meta: { requiresAuth: true } },
+    { name: 'pastdonations', path: '/pastdonations', component: PastDonations },
     { path: '*', component: Login }
 ]
