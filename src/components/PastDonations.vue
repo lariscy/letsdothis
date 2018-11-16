@@ -16,7 +16,6 @@
             <tr>
               <td>{{ props.item.name }}</td>
               <td>{{ props.item.amount }}</td>
-              <td>{{ props.item.date }}</td>
               <td v-if="props.item.message" class="text-xs-center">
                 <v-btn dark fab small 
                     @click="props.expanded = !props.expanded"
@@ -53,25 +52,9 @@ export default {
       tableHeaders: [
         { text: 'Name', value: 'name', sortable: false },
         { text: 'Amount', value: 'amount', sortable: false },
-        { text: 'Date', value: 'date', sortable: false },
         { text: 'Message', value: 'message', align: 'center', sortable: false },
       ],
-      tableItems: [
-        { id: 1, name: 'Steven Lariscy', amount: '$100.00', date: '10/27/2018', message: "hey buddy" },
-        { id: 2, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 3, name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: "hiya" },
-        { id: 4, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: "here is a message" },
-        { id: 5, name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 6, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 7, name: 'Steven Lariscy', amount: '$150.00', date: '10/28/2018', message: false },
-        { id: 8, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 9, name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 10, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 11, name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: "message for you" },
-        { id: 12, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: "another message for you" },
-        { id: 13, name: 'Steven Lariscy', amount: '$100.00', date: '10/26/2018', message: false },
-        { id: 14, name: 'Kate Ingram', amount: '$100.00', date: '10/26/2018', message: false },
-      ],
+      tableItems: [],
       pagination: {
         //sortBy: 'date',
         rowsPerPage: 10
@@ -89,8 +72,7 @@ export default {
               me.tableItems.push({
                 id: donation.id,
                 name: donation.name,
-                amount: "$"+((donation.numberOfBracelets * 5) + donation.additionalDonation)+".00",
-                date: donation.date,
+                amount: "$"+((parseInt(donation.numberOfBracelets) * 5) + parseInt(donation.additionalDonation))+".00",
                 message: donation.message
               })
             })

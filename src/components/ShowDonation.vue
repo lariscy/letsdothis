@@ -26,22 +26,22 @@
             </v-flex>
         </v-layout>
         <v-layout row>
-            <v-flex>
+            <v-flex v-if="showFacebookProfilePicture">
                 <p class="text-xs-center">
                     <v-avatar size="150" class="elevation-5">
-                        <v-img src="https://via.placeholder.com/150C"></v-img>
+                        <v-img :src="fbProfilePicture"></v-img>
                     </v-avatar>
                 </p>
             </v-flex>
         </v-layout>
         <v-layout row>
             <v-flex>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis omnis incidunt accusamus expedita voluptatibus animi, in veniam sed id, labore repellat aspernatur cum, itaque repellendus odit quos praesentium maiores! Repellendus harum, aliquid quia odit, et, id aspernatur maiores aliquam porro delectus doloremque error modi. Tempora optio minima et consequatur temporibus!
+                We just want to thank you for you donation!
             </v-flex>
         </v-layout>
         <v-layout row>
             <v-flex>
-                <v-btn v-if="showShowAllDonationsBtn" color="red darken-1" block dark>Show All Donations</v-btn>
+                <v-btn v-if="showShowAllDonationsBtn" color="red darken-1" block dark @click="gotoPastDonations">Show All Donations</v-btn>
                 <v-btn color="red darken-1" block dark to="/donate">Donate Again</v-btn>
                 <v-btn color="black" block dark @click="doLogout">Logout</v-btn>
             </v-flex>
@@ -65,7 +65,9 @@ export default {
     data () {
         return {
             showLoadingDialog: true,
-            showShowAllDonationsBtn: false,
+            showShowAllDonationsBtn: true,
+            showFacebookProfilePicture: false,
+            fbProfilePicture: 'https://via.placeholder.com/150C',
             donateName: '',
             donateAmount: ''
         }
@@ -76,28 +78,38 @@ export default {
         axios.get('/letsdothis-api/donation/last')
                 .then(response => {
                     if (response.data.status == 'ok'){
-                        const numberOfBracelets = response.data.data.numberOfBracelets
-                        const additionalDonation = response.data.data.additionalDonation
+                        const numberOfBracelets = parseInt(response.data.data.numberOfBracelets)
+                        const additionalDonation = parseInt(response.data.data.additionalDonation)
 
                         me.donateName = response.data.data.name
                         me.donateAmount = "$"+((numberOfBracelets * 5) + additionalDonation)+".00"
 
                         me.showLoadingDialog = false
+                    } else {
+                        me.$router.push({ name: 'donate' })
                     }
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                    me.$router.push({ name: 'donate' })
+                })
+        axios.get('/letsdothis-api/fbUserPicture')
+                .then(response => {
+                    me.fbProfilePicture = response.data.data.url
+                })
     },
 
     methods: {
         doLogout: function(){
             const me = this
-            axios.post('/letsdothis-api/killsession')
-                    .then(response => {
-                        if (response.data.status == 'ok'){
-                            me.$router.push({ name: 'login' })
-                        }
-                    })
+            axios.get('/letsdothis-api/killsession')
+                    .then(response => { console.log(response) })
                     .catch(err => console.log(err))
+                    .finally(() => {
+                        me.$router.push({ name: 'login' })
+                    })
+        },
+        gotoPastDonations: function(){
+            this.$router.push({ name: 'pastdonations' })
         }
     }
 }

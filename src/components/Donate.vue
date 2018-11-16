@@ -100,7 +100,7 @@
               <v-label>- Note -</v-label>
             </p>
             <p class="text-xs-center mb-0">
-              Payments should be sent to: FART
+              Payments should be sent to: <a href="https://www.paypal.me/katecingram" target="_blank">katecingram</a>
             </p>
           </div>
 
